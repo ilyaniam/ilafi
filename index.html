@@ -1,69 +1,72 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-  <title>Love Meter: Ilyan & Afi</title>
+  <title>Love Meter · Ilyan & Afi</title>
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <!-- html2canvas for saving -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
-    /* Reset & Base */
+    /* ---------- RESET & BASE ---------- */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
 
-    html, body {
-      width: 100%;
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #FAFAFA;
+      color: #111827;
+      line-height: 1.6;
+      font-weight: 400;
       min-height: 100vh;
-      font-family: 'Inter', sans-serif;
-      font-weight: 300;
-      color: #3a2c3f;
-      background: linear-gradient(145deg, #fbe9f0 0%, #e8d9f5 30%, #d4e6f7 65%, #d9f0e3 100%);
-      background-size: 300% 300%;
-      animation: softShift 24s ease-in-out infinite;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 1.2rem;
-      line-height: 1.5;
-    }
-
-    @keyframes softShift {
-      0% { background-position: 0% 30%; }
-      50% { background-position: 100% 70%; }
-      100% { background-position: 0% 30%; }
-    }
-
-    /* Glass Card */
-    .glass-card {
-      background: rgba(255, 255, 255, 0.3);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-radius: 3rem;
-      border: 1px solid rgba(255, 255, 255, 0.6);
-      box-shadow: 0 25px 50px -8px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.4) inset;
-      padding: 2.5rem 2rem;
-      width: 100%;
-      max-width: 680px;
-      transition: all 0.5s cubic-bezier(0.2, 0.9, 0.3, 1);
+      padding: 1.5rem;
       position: relative;
-      z-index: 10;
+      overflow-x: hidden;
+      /* extremely subtle animated gradient */
+      background: linear-gradient(145deg, #ffffff, #f5f5f7, #fafafa, #f0f0f2, #fefefe);
+      background-size: 400% 400%;
+      animation: gradientDrift 40s ease infinite;
     }
 
-    @media (max-width: 480px) {
-      .glass-card {
-        padding: 2rem 1.5rem;
-        border-radius: 2.5rem;
-      }
+    @keyframes gradientDrift {
+      0% { background-position: 0% 0%; }
+      50% { background-position: 100% 100%; }
+      100% { background-position: 0% 0%; }
     }
 
-    /* Typography */
-    h1, h2, h3 {
-      font-family: 'Playfair Display', serif;
+    /* subtle floating particles (pure CSS) */
+    .particle {
+      position: fixed;
+      width: 4px;
+      height: 4px;
+      background: rgba(17, 24, 39, 0.08);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 1;
+      animation: floatParticle 18s infinite alternate ease-in-out;
+    }
+
+    @keyframes floatParticle {
+      0% { transform: translate(0, 0) scale(1); opacity: 0.2; }
+      100% { transform: translate(30px, -40px) scale(1.8); opacity: 0.5; }
+    }
+
+    /* ---------- TYPOGRAPHY ---------- */
+    h1, h2, h3, .serif {
+      font-family: 'Playfair Display', Georgia, serif;
       font-weight: 500;
       letter-spacing: -0.01em;
     }
@@ -71,742 +74,733 @@
     h1 {
       font-size: clamp(2.8rem, 10vw, 4.2rem);
       line-height: 1.1;
-      color: #3a2c3f;
+      margin-bottom: 0.75rem;
+    }
+
+    h2 {
+      font-size: clamp(1.5rem, 5vw, 2rem);
+      font-weight: 400;
+      line-height: 1.3;
+      margin-bottom: 1rem;
     }
 
     .quote {
-      font-family: 'Playfair Display', serif;
+      font-family: 'Playfair Display', Georgia, serif;
       font-style: italic;
       font-weight: 400;
       font-size: 1.1rem;
-      color: #5f4a5e;
-      margin: 1.8rem 0 2.5rem;
       line-height: 1.6;
-      letter-spacing: 0.01em;
-      text-align: center;
-      padding: 0 0.5rem;
+      color: #6B7280;
+      max-width: 500px;
+      margin: 0 auto 2rem;
     }
 
-    /* Buttons */
+    .text-secondary {
+      color: #6B7280;
+      font-size: 0.95rem;
+      letter-spacing: 0.01em;
+    }
+
+    /* ---------- LAYOUT & CARDS ---------- */
+    .app-container {
+      width: 100%;
+      max-width: 680px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 10;
+    }
+
+    .glass-card {
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(17, 24, 39, 0.08);
+      border-radius: 24px;
+      padding: 2rem 1.8rem;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+      transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+      width: 100%;
+      margin-bottom: 1.5rem;
+    }
+
+    @media (min-width: 600px) {
+      .glass-card {
+        padding: 2.5rem 2.8rem;
+      }
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .section-fade {
+      animation: fadeBlurIn 1s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+    }
+
+    @keyframes fadeBlurIn {
+      0% { opacity: 0; filter: blur(4px); transform: scale(0.99); }
+      100% { opacity: 1; filter: blur(0); transform: scale(1); }
+    }
+
+    .section-fade-out {
+      animation: fadeBlurOut 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+    }
+
+    @keyframes fadeBlurOut {
+      0% { opacity: 1; filter: blur(0); transform: scale(1); }
+      100% { opacity: 0; filter: blur(6px); transform: scale(0.98); }
+    }
+
+    /* ---------- BUTTONS ---------- */
     .btn {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 0.6rem;
-      padding: 1rem 2rem;
-      border-radius: 4rem;
-      border: 1px solid rgba(255, 255, 255, 0.7);
-      background: rgba(255, 255, 255, 0.5);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
+      gap: 0.5rem;
+      padding: 0.85rem 2rem;
+      border-radius: 40px;
       font-family: 'Inter', sans-serif;
-      font-weight: 400;
+      font-weight: 500;
       font-size: 1rem;
-      color: #3a2c3f;
-      letter-spacing: 0.02em;
+      letter-spacing: 0.01em;
+      border: 1px solid rgba(17, 24, 39, 0.12);
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(4px);
+      color: #111827;
       cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.03);
+      transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
       text-decoration: none;
-      border: 1px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+      line-height: 1.2;
+    }
+
+    .btn:hover {
+      background: rgba(255, 255, 255, 0.9);
+      border-color: rgba(17, 24, 39, 0.2);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+      transform: translateY(-1px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
     }
 
     .btn-primary {
-      background: rgba(255, 255, 255, 0.8);
-      border: 1px solid #ffffff;
-      box-shadow: 0 12px 30px -8px rgba(197, 144, 176, 0.25);
+      background: #111827;
+      color: #FAFAFA;
+      border-color: #111827;
+      padding: 0.9rem 2.4rem;
       font-weight: 500;
-      color: #3a2c3f;
     }
 
     .btn-primary:hover {
-      background: white;
-      transform: translateY(-3px);
-      box-shadow: 0 20px 35px -10px rgba(197, 144, 176, 0.35);
-      border-color: #fff;
-    }
-
-    .btn-secondary {
-      background: rgba(255, 255, 255, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.5);
-    }
-
-    .btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.4);
-      transform: translateY(-2px);
+      background: #1f2937;
+      border-color: #1f2937;
+      color: #fff;
     }
 
     .btn-group {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.8rem;
+      gap: 0.75rem;
       justify-content: center;
-      margin-top: 2rem;
     }
 
-    /* Layout Utilities */
-    .screen {
-      display: none;
-      opacity: 0;
-      transition: opacity 0.7s ease;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
+    .btn-group .btn {
+      flex: 1 0 auto;
+      min-width: 130px;
+    }
+
+    /* ---------- CAMERA & PREVIEW ---------- */
+    .camera-preview {
       width: 100%;
-    }
-
-    .screen.active {
-      display: flex;
-      opacity: 1;
-    }
-
-    .center-col {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      width: 100%;
-    }
-
-    /* Camera preview */
-    .camera-wrap {
-      width: 100%;
-      border-radius: 2rem;
+      border-radius: 20px;
       overflow: hidden;
-      margin: 1.2rem 0;
-      background: rgba(0, 0, 0, 0.05);
-      aspect-ratio: 3 / 4;
-      max-width: 380px;
-      margin-left: auto;
-      margin-right: auto;
-      box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.7);
+      background: #f0f0f2;
+      aspect-ratio: 4 / 3;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 1.5rem 0;
+      border: 1px solid rgba(17, 24, 39, 0.08);
       position: relative;
     }
 
-    video, canvas#captureCanvas {
+    .camera-preview video,
+    .camera-preview canvas,
+    .camera-preview img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       display: block;
     }
 
-    .instruction {
-      font-size: 0.95rem;
-      color: #5f4a5e;
-      font-style: italic;
-      margin: 0.5rem 0 0.2rem;
+    .camera-preview img {
+      display: none; /* shown after capture */
     }
 
-    /* Loading dots */
+    /* ---------- ANALYSIS MESSAGES ---------- */
+    .analysis-message {
+      font-size: 1.1rem;
+      font-weight: 400;
+      color: #111827;
+      padding: 0.5rem 0;
+      letter-spacing: 0.01em;
+      opacity: 0;
+      animation: fadeInMessage 0.8s ease forwards;
+    }
+
+    @keyframes fadeInMessage {
+      0% { opacity: 0; transform: translateY(6px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
     .loading-dots {
       display: flex;
-      gap: 0.5rem;
+      gap: 0.4rem;
       justify-content: center;
-      margin: 1.5rem 0;
+      margin: 1.8rem 0 0.5rem;
     }
 
     .loading-dots span {
-      width: 10px;
-      height: 10px;
+      width: 6px;
+      height: 6px;
+      background: #9ca3af;
       border-radius: 50%;
-      background: #cfa5c0;
-      animation: pulseDot 1.4s infinite ease-in-out both;
+      animation: dotPulse 1.4s infinite ease-in-out both;
     }
 
     .loading-dots span:nth-child(1) { animation-delay: -0.32s; }
     .loading-dots span:nth-child(2) { animation-delay: -0.16s; }
     .loading-dots span:nth-child(3) { animation-delay: 0s; }
 
-    @keyframes pulseDot {
-      0%, 80%, 100% { transform: scale(0.7); opacity: 0.4; }
-      40% { transform: scale(1); opacity: 1; }
+    @keyframes dotPulse {
+      0%, 80%, 100% { transform: scale(0.6); opacity: 0.3; }
+      40% { transform: scale(1.1); opacity: 0.9; }
     }
 
-    /* Love score circle */
-    .score-circle {
+    /* ---------- SCORE RING ---------- */
+    .score-ring-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 1rem 0 1.5rem;
+    }
+
+    .score-ring {
+      position: relative;
       width: 180px;
       height: 180px;
-      border-radius: 50%;
-      background: conic-gradient(#f7d1e0 0deg, #f7d1e0 0deg, #e2d0f0 0deg, #d0e6f5 0deg, #d0f0e4 0deg);
       display: flex;
       align-items: center;
       justify-content: center;
-      margin: 1.5rem auto;
-      position: relative;
-      box-shadow: 0 15px 30px -5px rgba(197, 144, 176, 0.3);
-      transition: background 0.1s ease;
     }
 
-    .score-circle::before {
-      content: '';
+    .score-ring svg {
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+    }
+
+    .score-ring .bg-circle {
+      fill: none;
+      stroke: rgba(17, 24, 39, 0.06);
+      stroke-width: 4;
+    }
+
+    .score-ring .progress-circle {
+      fill: none;
+      stroke: #111827;
+      stroke-width: 4;
+      stroke-linecap: round;
+      stroke-dasharray: 502.4; /* 2 * pi * 80 */
+      stroke-dashoffset: 502.4;
+      transition: stroke-dashoffset 1.6s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    .score-ring .score-text {
       position: absolute;
-      width: 140px;
-      height: 140px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.7);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.8);
-    }
-
-    .score-number {
-      position: relative;
-      font-size: 3rem;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 2.6rem;
       font-weight: 500;
-      font-family: 'Playfair Display', serif;
-      color: #3a2c3f;
+      color: #111827;
       line-height: 1;
     }
 
-    .score-number small {
+    .score-ring .score-text small {
       font-size: 1.2rem;
       font-weight: 400;
-      color: #7a6279;
+      color: #6B7280;
+      margin-left: 2px;
     }
 
-    /* Analysis text list */
-    .analysis-lines {
-      display: flex;
-      flex-direction: column;
-      gap: 0.8rem;
-      margin: 1.2rem 0 0.5rem;
+    /* ---------- FOOTER ---------- */
+    .footer {
       text-align: center;
-    }
-
-    .analysis-line {
-      opacity: 0;
-      transform: translateY(10px);
-      animation: fadeSlideUp 0.8s forwards;
-      font-size: 1rem;
-      color: #4e3b4e;
+      padding: 2rem 0 0.5rem;
+      color: #6B7280;
+      font-size: 0.9rem;
       letter-spacing: 0.01em;
+      line-height: 1.6;
     }
 
-    @keyframes fadeSlideUp {
-      to {
-        opacity: 1;
-        transform: translateY(0);
+    .footer .serif {
+      font-size: 1rem;
+      color: #4B5563;
+    }
+
+    /* ---------- UTILS ---------- */
+    .text-center { text-align: center; }
+    .mt-2 { margin-top: 1.2rem; }
+    .mt-3 { margin-top: 2rem; }
+    .mb-1 { margin-bottom: 0.5rem; }
+    .mb-2 { margin-bottom: 1.2rem; }
+    .w-full { width: 100%; }
+
+    /* ---------- RESPONSIVE ---------- */
+    @media (max-width: 480px) {
+      .glass-card {
+        padding: 1.5rem 1.2rem;
+        border-radius: 20px;
+      }
+      .btn-group .btn {
+        min-width: 100%;
+      }
+      .score-ring {
+        width: 150px;
+        height: 150px;
+      }
+      .score-ring .score-text {
+        font-size: 2.2rem;
       }
     }
 
-    /* Heart animation */
-    .heart-pair {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 1.2rem;
-      margin: 1rem 0 1.5rem;
-      font-size: 2.2rem;
-      color: #d99cb0;
-      filter: drop-shadow(0 6px 12px rgba(217, 156, 176, 0.3));
+    /* hide video until permission */
+    .camera-preview video {
+      display: none;
     }
-
-    .heart-left, .heart-right {
-      display: inline-block;
-      animation: floatHeart 2.6s ease-in-out infinite;
+    .camera-preview video.active {
+      display: block;
     }
-
-    .heart-left { animation-delay: 0s; }
-    .heart-right { animation-delay: 0.6s; }
-
-    @keyframes floatHeart {
-      0%, 100% { transform: translateY(0) scale(1); }
-      50% { transform: translateY(-8px) scale(1.06); }
-    }
-
-    /* Message card */
-    .message-card {
-      background: rgba(255, 255, 255, 0.45);
-      border-radius: 1.8rem;
-      padding: 1.8rem 1.5rem;
-      margin: 1.5rem 0 1rem;
-      border: 1px solid rgba(255, 255, 255, 0.8);
-      font-family: 'Playfair Display', serif;
-      font-style: italic;
-      font-size: 1.1rem;
-      line-height: 1.6;
-      color: #3a2c3f;
-      box-shadow: 0 8px 20px -8px rgba(0, 0, 0, 0.05);
-    }
-
-    /* Footer */
-    .footer {
-      margin-top: 2.2rem;
-      font-size: 0.8rem;
-      color: #7a6279;
-      letter-spacing: 0.02em;
-      border-top: 1px solid rgba(255, 255, 255, 0.7);
-      padding-top: 1.2rem;
-      width: 100%;
-      font-weight: 300;
-    }
-
-    /* Floating hearts background */
-    .floating-hearts {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 1;
-      overflow: hidden;
-    }
-
-    .floating-hearts span {
-      position: absolute;
-      color: rgba(255, 220, 235, 0.6);
-      font-size: 1.2rem;
-      animation: floatUp 14s infinite linear;
-      bottom: -10%;
-      opacity: 0.5;
-      filter: blur(0.5px);
-    }
-
-    @keyframes floatUp {
-      0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-      15% { opacity: 0.7; }
-      85% { opacity: 0.7; }
-      100% { transform: translateY(-110vh) rotate(20deg); opacity: 0; }
-    }
-
-    /* Utility */
-    .mt-2 { margin-top: 1rem; }
-    .mb-1 { margin-bottom: 0.5rem; }
-    .hidden { display: none !important; }
-
-    .fade-in {
-      animation: fadeIn 1s ease forwards;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Screen transition wrapper */
-    #app-container {
-      width: 100%;
-      max-width: 680px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-
-    /* Camera permission fallback */
-    .error-msg {
-      color: #b34a6b;
-      background: rgba(255, 240, 245, 0.8);
-      padding: 0.8rem;
-      border-radius: 1rem;
-      font-size: 0.9rem;
-    }
-
-    /* Responsive */
-    @media (max-width: 480px) {
-      h1 { font-size: 2.6rem; }
-      .quote { font-size: 1rem; }
-      .score-circle { width: 150px; height: 150px; }
-      .score-circle::before { width: 116px; height: 116px; }
-      .score-number { font-size: 2.4rem; }
-      .btn { padding: 0.85rem 1.6rem; font-size: 0.95rem; }
+    .camera-preview img.active {
+      display: block;
     }
   </style>
 </head>
 <body>
-  <!-- Floating hearts background -->
-  <div class="floating-hearts" id="floatingHearts"></div>
+  <!-- floating particles -->
+  <div class="particle" style="top: 15%; left: 8%; animation-duration: 22s;"></div>
+  <div class="particle" style="top: 70%; left: 85%; animation-duration: 28s; animation-delay: -5s; width: 6px; height: 6px;"></div>
+  <div class="particle" style="top: 40%; left: 92%; animation-duration: 20s; animation-delay: -2s;"></div>
+  <div class="particle" style="top: 85%; left: 12%; animation-duration: 26s; animation-delay: -8s; width: 5px; height: 5px;"></div>
+  <div class="particle" style="top: 10%; left: 70%; animation-duration: 30s; animation-delay: -12s;"></div>
 
-  <div id="app-container">
-    <!-- SCREEN 1: OPENING -->
-    <div class="glass-card screen active" id="screen-opening">
-      <h1>Ilyan & Afi</h1>
-      <div class="quote">
-        “Di antara ribuan langkah yang saling berpapasan,<br>
-        ada dua hati yang memilih pulang pada arah yang sama.”
+  <main class="app-container">
+    <!-- ========== OPENING SCREEN ========== -->
+    <section id="openingScreen" class="glass-card section-fade text-center">
+      <h1>Ilyan &amp; Afi</h1>
+      <p class="quote">
+        "Among thousands of paths crossing one another,<br>
+        two hearts chose to walk home in the same direction."
+      </p>
+      <button id="measureBtn" class="btn btn-primary">Measure Our Universe</button>
+    </section>
+
+    <!-- ========== CAMERA EXPERIENCE ========== -->
+    <section id="cameraScreen" class="glass-card hidden text-center">
+      <h2 class="serif" style="font-size: 1.8rem;">A quiet moment</h2>
+      <p class="text-secondary" style="margin-bottom: 0.5rem;">Look into the screen for a moment,<br>and let the light preserve this small memory.</p>
+      
+      <div class="camera-preview" id="cameraPreview">
+        <video id="videoElement" autoplay playsinline muted></video>
+        <img id="capturedImage" alt="Captured memory">
       </div>
-      <button class="btn btn-primary" id="btn-start">🤍 Ukur Semesta Kita</button>
-    </div>
 
-    <!-- SCREEN 2: CAMERA -->
-    <div class="glass-card screen" id="screen-camera">
-      <div class="center-col">
-        <p class="instruction">Tatap layar sejenak,<br>biarkan cahaya menyimpan momen kecil ini.</p>
-        <div class="camera-wrap" id="cameraWrap">
-          <video id="video" autoplay playsinline muted></video>
-          <canvas id="captureCanvas" style="display: none;"></canvas>
-        </div>
-        <button class="btn btn-primary" id="btn-capture">📸 Ambil Momen</button>
-        <p class="error-msg hidden" id="cameraError">Akses kamera diperlukan untuk melanjutkan. Izinkan akses kamera di browser Anda.</p>
+      <div class="btn-group">
+        <button id="captureBtn" class="btn btn-primary" disabled>Capture the Moment</button>
       </div>
-    </div>
+      <p id="cameraStatus" class="text-secondary mt-2" style="font-size: 0.85rem;"></p>
+    </section>
 
-    <!-- SCREEN 3: LOADING (after capture) -->
-    <div class="glass-card screen" id="screen-loading">
-      <div class="center-col">
-        <div class="heart-pair">
-          <span class="heart-left">❤️</span>
-          <span class="heart-right">❤️</span>
-        </div>
-        <div class="loading-dots">
-          <span></span><span></span><span></span>
-        </div>
-        <p style="font-style: italic; color: #5f4a5e;">Menghitung kebetulan...</p>
+    <!-- ========== ANALYSIS EXPERIENCE ========== -->
+    <section id="analysisScreen" class="glass-card hidden text-center">
+      <div id="analysisMessageContainer" style="min-height: 100px; display: flex; flex-direction: column; justify-content: center;">
+        <!-- messages injected here -->
       </div>
-    </div>
+      <div class="loading-dots">
+        <span></span><span></span><span></span>
+      </div>
+    </section>
 
-    <!-- SCREEN 4: ANALYSIS + RESULT (disatukan) -->
-    <div class="glass-card screen" id="screen-result">
-      <div class="center-col">
-        <div class="analysis-lines" id="analysisLines">
-          <div class="analysis-line" style="animation-delay: 0s;">Menghitung kebetulan...</div>
-          <div class="analysis-line" style="animation-delay: 0.3s;">Membaca bahasa mata...</div>
-          <div class="analysis-line" style="animation-delay: 0.6s;">Mencari jejak semesta...</div>
-          <div class="analysis-line" style="animation-delay: 0.9s;">Menimbang tawa yang pernah dibagi...</div>
-        </div>
-
-        <!-- Score circle -->
-        <div class="score-circle" id="scoreCircle">
-          <div class="score-number" id="scoreNumber">0<small>%</small></div>
-        </div>
-
-        <!-- dynamic quote after score -->
-        <p class="quote" id="resultQuote" style="font-size: 1rem; margin: 0.5rem 0 1rem;">
-          Kalian bukan dua orang yang sama.<br>Kalian adalah dua cerita yang memilih tumbuh bersama.
-        </p>
-
-        <!-- random poetic message -->
-        <div class="message-card" id="poeticMessage">
-          “Cinta bukan tentang menemukan yang sempurna,...”
-        </div>
-
-        <!-- Action buttons -->
-        <div class="btn-group">
-          <button class="btn btn-secondary" id="btn-repeat">🔄 Ulangi</button>
-          <button class="btn btn-secondary" id="btn-save">💾 Simpan Hasil</button>
-          <button class="btn btn-secondary" id="btn-share">📤 Bagikan</button>
+    <!-- ========== LOVE SCORE ========== -->
+    <section id="scoreScreen" class="glass-card hidden text-center">
+      <h2 class="serif" style="font-size: 1.6rem;">Your universe</h2>
+      <div class="score-ring-container">
+        <div class="score-ring">
+          <svg viewBox="0 0 180 180">
+            <circle class="bg-circle" cx="90" cy="90" r="80"></circle>
+            <circle id="progressCircle" class="progress-circle" cx="90" cy="90" r="80"></circle>
+          </svg>
+          <span id="scoreText" class="score-text">0<small>%</small></span>
         </div>
       </div>
-    </div>
+      <p class="quote" style="margin-bottom: 2rem;">
+        "You are not two people who are the same.<br>
+        You are two stories that chose to grow together."
+      </p>
 
-    <!-- Footer inside last screen card? We'll put footer globally after cards but inside container for alignment -->
-  </div>
+      <!-- poetic message (random) -->
+      <div id="poeticMessage" class="serif" style="font-size: 1.1rem; line-height: 1.6; color: #1F2937; margin-bottom: 2rem; padding: 0 0.5rem;"></div>
 
-  <!-- footer separate outside card? Actually we want footer only visible at the end, but it's fine to place inside result card area or as global. We'll place it inside the last screen for simplicity. 
-       But it looks better inside the glass-card, so we add it inside result screen. However to keep design, we add a footer inside the result screen at the bottom. But we need to add it now, so we modify the result screen to include footer after btn-group. We'll add it in the HTML.
-       Let's adjust.
-  -->
-  <style>
-    /* Quick adjust */
-  </style>
+      <!-- result actions -->
+      <div class="btn-group">
+        <button id="tryAgainBtn" class="btn">Try Again</button>
+        <button id="saveResultBtn" class="btn">Save Result</button>
+        <button id="shareBtn" class="btn">Share</button>
+      </div>
+      <p id="shareFallback" class="text-secondary mt-2" style="font-size: 0.8rem;"></p>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="footer">
+      <p class="serif">For Afi,<br>the one who makes ordinary days feel a little more meaningful.</p>
+    </footer>
+  </main>
 
   <script>
     (function() {
-      // --- Data ---
-      const poeticMessages = [
-        "Cinta bukan tentang menemukan yang sempurna, melainkan tetap memilih meski telah melihat segala kurangnya.",
-        "Sebagian orang datang membawa musim. Sebagian lainnya datang lalu menjadi rumah.",
-        "Jika waktu adalah sungai, maka semoga kita tetap memilih perahu yang sama.",
-        "Barangkali semesta tidak mempertemukan tanpa alasan.",
-        "Di dunia yang selalu terburu-buru, ada bahagia dalam seseorang yang memilih menetap."
+      'use strict';
+
+      // ---------- DOM refs ----------
+      const openingScreen = document.getElementById('openingScreen');
+      const cameraScreen = document.getElementById('cameraScreen');
+      const analysisScreen = document.getElementById('analysisScreen');
+      const scoreScreen = document.getElementById('scoreScreen');
+      
+      const measureBtn = document.getElementById('measureBtn');
+      const captureBtn = document.getElementById('captureBtn');
+      const tryAgainBtn = document.getElementById('tryAgainBtn');
+      const saveResultBtn = document.getElementById('saveResultBtn');
+      const shareBtn = document.getElementById('shareBtn');
+      
+      const videoElement = document.getElementById('videoElement');
+      const capturedImage = document.getElementById('capturedImage');
+      const cameraStatus = document.getElementById('cameraStatus');
+      const analysisMessageContainer = document.getElementById('analysisMessageContainer');
+      
+      const progressCircle = document.getElementById('progressCircle');
+      const scoreText = document.getElementById('scoreText');
+      const poeticMessageEl = document.getElementById('poeticMessage');
+      const shareFallback = document.getElementById('shareFallback');
+
+      // ---------- State ----------
+      let stream = null;
+      let capturedDataUrl = null;
+      let finalScore = 0;
+      let currentSection = 'opening';
+      let analysisTimeouts = [];
+      let animationFrame = null;
+
+      // ---------- Poetic messages ----------
+      const POETIC_MESSAGES = [
+        "Love is not about finding someone perfect,\nbut choosing them even after seeing every imperfection.",
+        "Some people arrive like a season.\nOthers arrive and become home.",
+        "If time is a river,\nmay we continue choosing the same boat.",
+        "Perhaps the universe never brings two souls together without a reason.",
+        "In a world that is always rushing,\nthere is a quiet happiness in someone who chooses to stay."
       ];
 
-      // --- State ---
-      let currentStream = null;
-      let randomScore = 0;
-      let capturedImageData = null; // not used but kept for potential save
-
-      // --- DOM Elements ---
-      const screens = {
-        opening: document.getElementById('screen-opening'),
-        camera: document.getElementById('screen-camera'),
-        loading: document.getElementById('screen-loading'),
-        result: document.getElementById('screen-result')
-      };
-
-      const btnStart = document.getElementById('btn-start');
-      const btnCapture = document.getElementById('btn-capture');
-      const video = document.getElementById('video');
-      const captureCanvas = document.getElementById('captureCanvas');
-      const cameraError = document.getElementById('cameraError');
-      const scoreNumber = document.getElementById('scoreNumber');
-      const scoreCircle = document.getElementById('scoreCircle');
-      const poeticMessageDiv = document.getElementById('poeticMessage');
-      const resultQuote = document.getElementById('resultQuote');
-      const btnRepeat = document.getElementById('btn-repeat');
-      const btnSave = document.getElementById('btn-save');
-      const btnShare = document.getElementById('btn-share');
-
-      // --- Helper: switch screen ---
-      function showScreen(screenId) {
-        // hide all
-        Object.values(screens).forEach(s => s.classList.remove('active'));
-        if (screens[screenId]) {
-          screens[screenId].classList.add('active');
+      // ---------- Helper: transition sections with fade+blur ----------
+      function showSection(sectionToShow, sectionToHide) {
+        if (sectionToHide) {
+          sectionToHide.classList.add('section-fade-out');
+          setTimeout(() => {
+            sectionToHide.classList.add('hidden');
+            sectionToHide.classList.remove('section-fade-out');
+          }, 500);
+        }
+        if (sectionToShow) {
+          sectionToShow.classList.remove('hidden');
+          sectionToShow.classList.add('section-fade');
+          // Force reflow for animation restart
+          void sectionToShow.offsetWidth;
         }
       }
 
-      // --- Floating hearts background ---
-      function initFloatingHearts() {
-        const container = document.getElementById('floatingHearts');
-        const heartChars = ['❤️', '🤍', '💗', '💜', '🩷', '💙', '🌸', '✨'];
-        for (let i = 0; i < 22; i++) {
-          const span = document.createElement('span');
-          span.textContent = heartChars[Math.floor(Math.random() * heartChars.length)];
-          span.style.left = Math.random() * 100 + '%';
-          span.style.fontSize = (Math.random() * 1.5 + 0.8) + 'rem';
-          span.style.animationDuration = (Math.random() * 12 + 12) + 's';
-          span.style.animationDelay = (Math.random() * -20) + 's';
-          span.style.opacity = Math.random() * 0.4 + 0.2;
-          container.appendChild(span);
+      // ---------- Reset app state (for Try Again) ----------
+      function resetApp() {
+        // Stop camera stream if active
+        stopCamera();
+        
+        // Clear timeouts
+        analysisTimeouts.forEach(t => clearTimeout(t));
+        analysisTimeouts = [];
+        
+        // Reset captured image
+        capturedDataUrl = null;
+        capturedImage.src = '';
+        capturedImage.classList.remove('active');
+        videoElement.classList.remove('active');
+        videoElement.srcObject = null;
+        
+        // Reset score display
+        progressCircle.style.strokeDashoffset = 502.4;
+        scoreText.innerHTML = '0<small>%</small>';
+        finalScore = 0;
+        
+        // Reset buttons
+        captureBtn.disabled = true;
+        cameraStatus.textContent = '';
+        shareFallback.textContent = '';
+        
+        // Show opening, hide others
+        [cameraScreen, analysisScreen, scoreScreen].forEach(s => {
+          s.classList.add('hidden');
+          s.classList.remove('section-fade', 'section-fade-out');
+        });
+        openingScreen.classList.remove('hidden');
+        openingScreen.classList.add('section-fade');
+        currentSection = 'opening';
+      }
+
+      // ---------- Stop camera stream ----------
+      function stopCamera() {
+        if (stream) {
+          stream.getTracks().forEach(track => track.stop());
+          stream = null;
         }
       }
 
-      // --- Camera functions ---
+      // ---------- Request camera permission and start preview ----------
       async function startCamera() {
         try {
-          if (currentStream) {
-            stopCamera();
-          }
-          const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
-          currentStream = stream;
-          video.srcObject = stream;
-          cameraError.classList.add('hidden');
-          return true;
+          cameraStatus.textContent = 'Requesting camera access...';
+          stream = await navigator.mediaDevices.getUserMedia({ 
+            video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } } 
+          });
+          videoElement.srcObject = stream;
+          videoElement.classList.add('active');
+          capturedImage.classList.remove('active');
+          captureBtn.disabled = false;
+          cameraStatus.textContent = 'Camera ready — look into the lens';
         } catch (err) {
           console.warn('Camera error:', err);
-          cameraError.classList.remove('hidden');
-          return false;
+          cameraStatus.textContent = 'Camera access was not granted. You can still continue.';
+          // Create a placeholder image so the flow can continue
+          captureBtn.disabled = false;
         }
       }
 
-      function stopCamera() {
-        if (currentStream) {
-          currentStream.getTracks().forEach(track => track.stop());
-          currentStream = null;
-          video.srcObject = null;
+      // ---------- Capture image from video ----------
+      function captureMoment() {
+        if (!videoElement.srcObject) {
+          // If no camera, use a subtle gradient as placeholder
+          const canvas = document.createElement('canvas');
+          canvas.width = 640;
+          canvas.height = 480;
+          const ctx = canvas.getContext('2d');
+          const gradient = ctx.createLinearGradient(0, 0, 640, 480);
+          gradient.addColorStop(0, '#f5f5f7');
+          gradient.addColorStop(0.5, '#e5e5e7');
+          gradient.addColorStop(1, '#fafafa');
+          ctx.fillStyle = gradient;
+          ctx.fillRect(0, 0, 640, 480);
+          ctx.font = 'italic 24px "Playfair Display", serif';
+          ctx.fillStyle = '#6B7280';
+          ctx.textAlign = 'center';
+          ctx.fillText('a quiet memory', 320, 240);
+          capturedDataUrl = canvas.toDataURL('image/jpeg', 0.9);
+        } else {
+          const canvas = document.createElement('canvas');
+          const video = videoElement;
+          const width = video.videoWidth || 640;
+          const height = video.videoHeight || 480;
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(video, 0, 0, width, height);
+          capturedDataUrl = canvas.toDataURL('image/jpeg', 0.9);
         }
-      }
 
-      // --- Capture photo ---
-      function capturePhoto() {
-        if (!currentStream) {
-          // try to restart if not started
-          startCamera().then(success => {
-            if (success) {
-              // wait a moment for video to be ready
-              setTimeout(() => {
-                if (currentStream) {
-                  performCapture();
-                }
-              }, 300);
-            }
-          });
-          return;
-        }
-        performCapture();
-      }
+        // Show captured image
+        capturedImage.src = capturedDataUrl;
+        capturedImage.classList.add('active');
+        videoElement.classList.remove('active');
+        captureBtn.disabled = true;
+        cameraStatus.textContent = 'Memory captured.';
 
-      function performCapture() {
-        if (video.videoWidth === 0 || video.videoHeight === 0) {
-          // wait a bit
-          setTimeout(performCapture, 200);
-          return;
-        }
-        const ctx = captureCanvas.getContext('2d');
-        captureCanvas.width = video.videoWidth;
-        captureCanvas.height = video.videoHeight;
-        ctx.drawImage(video, 0, 0, captureCanvas.width, captureCanvas.height);
-        capturedImageData = captureCanvas.toDataURL('image/jpeg'); // optional
-
-        // proceed to loading screen
+        // Stop camera stream
         stopCamera();
-        showScreen('loading');
 
-        // after loading, go to result
+        // Transition to analysis after short delay
         setTimeout(() => {
-          // finish analysis: generate score and message
-          generateResult();
-          showScreen('result');
-          animateScoreAndContent();
-        }, 2800); // loading duration
+          showSection(analysisScreen, cameraScreen);
+          runAnalysisSequence();
+        }, 800);
       }
 
-      // --- Generate random score & message ---
-      function generateResult() {
-        // random score 85–100
-        randomScore = Math.floor(Math.random() * 16) + 85; // 85..100
-        // random poetic message
-        const randomIndex = Math.floor(Math.random() * poeticMessages.length);
-        poeticMessageDiv.textContent = `“${poeticMessages[randomIndex]}”`;
+      // ---------- Analysis sequence ----------
+      function runAnalysisSequence() {
+        const messages = [
+          "Calculating coincidences...",
+          "Reading the language of your eyes...",
+          "Tracing the footprints of the universe...",
+          "Weighing every shared laughter..."
+        ];
 
-        // optional: change quote based on score? we keep the default one from design, but could vary.
-        // For elegance, keep the default quote but maybe update if score is 100? not necessary.
-      }
+        analysisMessageContainer.innerHTML = '';
+        
+        // Clear previous timeouts
+        analysisTimeouts.forEach(t => clearTimeout(t));
+        analysisTimeouts = [];
 
-      // --- Animate score circle and number ---
-      function animateScoreAndContent() {
-        // set final number as text increment
-        let currentDisplay = 0;
-        const target = randomScore;
-        const duration = 1200; // ms
-        const stepTime = 16; // ~60fps
-        const steps = duration / stepTime;
-        const increment = target / steps;
-        let stepCount = 0;
+        messages.forEach((msg, index) => {
+          const t = setTimeout(() => {
+            // Fade out previous message
+            const prevMsg = analysisMessageContainer.querySelector('.analysis-message');
+            if (prevMsg) {
+              prevMsg.style.transition = 'opacity 0.4s ease';
+              prevMsg.style.opacity = '0';
+              setTimeout(() => {
+                if (prevMsg.parentNode) prevMsg.remove();
+              }, 400);
+            }
 
-        // update circle gradient based on score (conic gradient)
-        function updateCircle(percent) {
-          const deg = (percent / 100) * 360;
-          // pastel gradient: blush pink -> lavender -> baby blue -> mint
-          scoreCircle.style.background = `conic-gradient(
-            #f7d1e0 0deg, 
-            #f7d1e0 ${deg * 0.3}deg, 
-            #e2d0f0 ${deg * 0.5}deg, 
-            #d0e6f5 ${deg * 0.8}deg, 
-            #d0f0e4 ${deg}deg,
-            rgba(255,255,255,0.2) ${deg}deg
-          )`;
-        }
-
-        // initial
-        updateCircle(0);
-        scoreNumber.innerHTML = `0<small>%</small>`;
-
-        const interval = setInterval(() => {
-          stepCount++;
-          currentDisplay = Math.min(target, Math.round(stepCount * increment));
-          scoreNumber.innerHTML = `${currentDisplay}<small>%</small>`;
-          updateCircle(currentDisplay);
-          if (stepCount >= steps || currentDisplay >= target) {
-            clearInterval(interval);
-            scoreNumber.innerHTML = `${target}<small>%</small>`;
-            updateCircle(target);
-          }
-        }, stepTime);
-
-        // also re-trigger analysis lines animation? they already animate on screen show, but we can restart
-        // reset analysis line animations by cloning or re-adding class (simple)
-        const lines = document.querySelectorAll('.analysis-line');
-        lines.forEach((line, idx) => {
-          line.style.animation = 'none';
-          line.offsetHeight; // reflow
-          line.style.animation = `fadeSlideUp 0.8s forwards`;
-          line.style.animationDelay = `${idx * 0.3}s`;
+            // Add new message
+            const msgEl = document.createElement('div');
+            msgEl.className = 'analysis-message';
+            msgEl.textContent = msg;
+            analysisMessageContainer.appendChild(msgEl);
+          }, index * 900);
+          analysisTimeouts.push(t);
         });
 
-        // slight adjust on result quote maybe depending on score? not needed.
-        // also random message already set.
+        // After last message, show score
+        const totalDelay = messages.length * 900 + 1200;
+        const t = setTimeout(() => {
+          showSection(scoreScreen, analysisScreen);
+          generateScoreAndReveal();
+        }, totalDelay);
+        analysisTimeouts.push(t);
       }
 
-      // --- Reset to opening ---
-      function resetToOpening() {
-        stopCamera();
-        showScreen('opening');
-        // reset any animation states
-        scoreNumber.innerHTML = `0<small>%</small>`;
-        scoreCircle.style.background = `conic-gradient(#f7d1e0 0deg, #f7d1e0 0deg, #e2d0f0 0deg, #d0e6f5 0deg, #d0f0e4 0deg)`;
-        // reset analysis lines to hidden? they will reanimate later.
-        // also reset poetic message to default first one? optional
-        poeticMessageDiv.textContent = `“${poeticMessages[0]}”`;
-        resultQuote.innerHTML = `Kalian bukan dua orang yang sama.<br>Kalian adalah dua cerita yang memilih tumbuh bersama.`;
+      // ---------- Generate score (85-100) and animate ring ----------
+      function generateScoreAndReveal() {
+        // Random score between 85 and 100
+        finalScore = Math.floor(Math.random() * 16) + 85; // 85-100
+        
+        // Update score text
+        scoreText.innerHTML = `${finalScore}<small>%</small>`;
+        
+        // Animate ring: circumference = 2 * pi * 80 ≈ 502.4
+        const circumference = 502.4;
+        const offset = circumference - (finalScore / 100) * circumference;
+        // Use requestAnimationFrame to ensure transition applies
+        requestAnimationFrame(() => {
+          progressCircle.style.strokeDashoffset = offset;
+        });
+
+        // Pick random poetic message
+        const randomMsg = POETIC_MESSAGES[Math.floor(Math.random() * POETIC_MESSAGES.length)];
+        poeticMessageEl.textContent = randomMsg;
+        poeticMessageEl.style.whiteSpace = 'pre-line';
       }
 
-      // --- Save result (simple text download) ---
-      function saveResult() {
-        const message = poeticMessageDiv.textContent;
-        const scoreText = scoreNumber.textContent.trim();
-        const content = `Love Meter: Ilyan & Afi\n\nSkor: ${scoreText}\n\n"${message}"\n\n${resultQuote.textContent}\n\n— Dibuat dengan cinta —`;
-        const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = `LoveMeter_Ilyan_Afi_${randomScore}persen.txt`;
-        link.click();
-        URL.revokeObjectURL(link.href);
+      // ---------- Save result as PNG using html2canvas ----------
+      async function saveResult() {
+        const element = scoreScreen;
+        try {
+          // Temporarily hide buttons for cleaner capture? Optional: we can keep them.
+          // But we want the buttons visible in the captured image? The spec says "Save Result" 
+          // export as PNG. Usually you'd want the result card with score and message. We'll capture the score screen including buttons.
+          // For better result, we clone and remove the buttons? But user might want them. We'll include everything.
+          const canvas = await html2canvas(element, {
+            scale: 2,
+            backgroundColor: '#FAFAFA',
+            allowTaint: false,
+            useCORS: true,
+            logging: false,
+            windowWidth: element.scrollWidth,
+            windowHeight: element.scrollHeight
+          });
+          
+          const link = document.createElement('a');
+          link.download = `love-meter-ilyan-afi-${finalScore}.png`;
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+        } catch (err) {
+          console.error('Save failed:', err);
+          alert('Could not save the image. Please try again.');
+        }
       }
 
-      // --- Share (Web Share API fallback) ---
-      function shareResult() {
-        const scoreText = scoreNumber.textContent.trim();
-        const message = poeticMessageDiv.textContent;
-        const shareText = `Love Meter Ilyan & Afi: ${scoreText} 💕\n"${message}"`;
+      // ---------- Share via Web Share API with fallback ----------
+      async function shareResult() {
+        const shareText = `Ilyan & Afi — Love Meter: ${finalScore}%\n\n"You are not two people who are the same. You are two stories that chose to grow together."`;
+        
         if (navigator.share) {
-          navigator.share({
-            title: 'Love Meter: Ilyan & Afi',
-            text: shareText,
-          }).catch((err) => console.log('Share error:', err));
+          try {
+            await navigator.share({
+              title: 'Love Meter · Ilyan & Afi',
+              text: shareText,
+              url: window.location.href
+            });
+            shareFallback.textContent = '';
+          } catch (err) {
+            if (err.name !== 'AbortError') {
+              shareFallback.textContent = 'Sharing was cancelled.';
+            }
+          }
         } else {
-          // fallback: copy to clipboard
-          navigator.clipboard.writeText(shareText).then(() => {
-            alert('Hasil cinta disalin ke clipboard! 💌');
-          }).catch(() => {
-            alert('Gunakan simpan hasil untuk menyimpan kenangan ini.');
-          });
+          // Fallback: copy to clipboard
+          try {
+            await navigator.clipboard.writeText(`${shareText}\n\n${window.location.href}`);
+            shareFallback.textContent = 'Result copied to clipboard!';
+            setTimeout(() => { shareFallback.textContent = ''; }, 3000);
+          } catch (clipErr) {
+            shareFallback.textContent = 'Sharing not supported on this browser.';
+          }
         }
       }
 
-      // --- Event Listeners ---
-      btnStart.addEventListener('click', async () => {
-        showScreen('camera');
-        // start camera after showing screen
-        setTimeout(async () => {
-          const success = await startCamera();
-          if (!success) {
-            // if permission denied, still allow to capture? better show error but user can retry by clicking capture which will try again.
-          }
-        }, 200);
+      // ---------- Event bindings ----------
+      measureBtn.addEventListener('click', () => {
+        // Move to camera screen
+        showSection(cameraScreen, openingScreen);
+        currentSection = 'camera';
+        // Start camera after a short delay to let animation settle
+        setTimeout(() => {
+          startCamera();
+        }, 400);
       });
 
-      btnCapture.addEventListener('click', () => {
-        // if camera not active, try to start then capture
-        if (!currentStream) {
-          startCamera().then(success => {
-            if (success) {
-              setTimeout(() => {
-                capturePhoto();
-              }, 500);
-            } else {
-              // error shown already
-            }
-          });
-        } else {
-          capturePhoto();
-        }
+      captureBtn.addEventListener('click', () => {
+        captureMoment();
       });
 
-      btnRepeat.addEventListener('click', () => {
-        resetToOpening();
-        // ensure camera is stopped
-        stopCamera();
-        // also reset poetic message to first? not needed but nice
+      tryAgainBtn.addEventListener('click', () => {
+        resetApp();
       });
 
-      btnSave.addEventListener('click', saveResult);
+      saveResultBtn.addEventListener('click', saveResult);
+      shareBtn.addEventListener('click', shareResult);
 
-      btnShare.addEventListener('click', shareResult);
-
-      // cleanup on page unload
+      // Cleanup on page unload
       window.addEventListener('beforeunload', () => {
         stopCamera();
+        analysisTimeouts.forEach(t => clearTimeout(t));
       });
 
-      // --- Initialize floating hearts ---
-      initFloatingHearts();
+      // Pre-fill placeholder for captured image
+      capturedImage.alt = 'A preserved memory';
 
-      // Add footer dynamically inside result screen if not exists (to keep HTML clean)
-      // But we also want footer always visible at bottom? It's inside result screen card.
-      const resultScreenCard = screens.result;
-      const footerDiv = document.createElement('div');
-      footerDiv.className = 'footer';
-      footerDiv.innerHTML = `Untuk Afi,<br>yang membuat hari-hari biasa terasa lebih berarti.`;
-      resultScreenCard.appendChild(footerDiv);
+      // Ensure opening screen is visible at start
+      window.addEventListener('load', () => {
+        openingScreen.classList.add('section-fade');
+      });
 
-      // Also add a subtle footer to opening? Not necessary.
-
-      // Ensure screens other than opening are hidden initially
-      showScreen('opening');
     })();
   </script>
 </body>
