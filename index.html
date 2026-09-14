@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>Love Meter: Ilyan & Afi</title>
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    /* Reset & Base */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      font-weight: 300;
+      color: #3a2c3f;
+      background: linear-gradient(145deg, #fbe9f0 0%, #e8d9f5 30%, #d4e6f7 65%, #d9f0e3 100%);
+      background-size: 300% 300%;
+      animation: softShift 24s ease-in-out infinite;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.2rem;
+      line-height: 1.5;
+    }
+
+    @keyframes softShift {
+      0% { background-position: 0% 30%; }
+      50% { background-position: 100% 70%; }
+      100% { background-position: 0% 30%; }
+    }
+
+    /* Glass Card */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-radius: 3rem;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      box-shadow: 0 25px 50px -8px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.4) inset;
+      padding: 2.5rem 2rem;
+      width: 100%;
+      max-width: 680px;
+      transition: all 0.5s cubic-bezier(0.2, 0.9, 0.3, 1);
+      position: relative;
+      z-index: 10;
+    }
+
+    @media (max-width: 480px) {
+      .glass-card {
+        padding: 2rem 1.5rem;
+        border-radius: 2.5rem;
+      }
+    }
+
+    /* Typography */
+    h1, h2, h3 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 500;
+      letter-spacing: -0.01em;
+    }
+
+    h1 {
+      font-size: clamp(2.8rem, 10vw, 4.2rem);
+      line-height: 1.1;
+      color: #3a2c3f;
+    }
+
+    .quote {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 1.1rem;
+      color: #5f4a5e;
+      margin: 1.8rem 0 2.5rem;
+      line-height: 1.6;
+      letter-spacing: 0.01em;
+      text-align: center;
+      padding: 0 0.5rem;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      padding: 1rem 2rem;
+      border-radius: 4rem;
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      background: rgba(255, 255, 255, 0.5);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      font-size: 1rem;
+      color: #3a2c3f;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.03);
+      text-decoration: none;
+      border: 1px solid rgba(255, 255, 255, 0.8);
+    }
+
+    .btn-primary {
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid #ffffff;
+      box-shadow: 0 12px 30px -8px rgba(197, 144, 176, 0.25);
+      font-weight: 500;
+      color: #3a2c3f;
+    }
+
+    .btn-primary:hover {
+      background: white;
+      transform: translateY(-3px);
+      box-shadow: 0 20px 35px -10px rgba(197, 144, 176, 0.35);
+      border-color: #fff;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+
+    /* Layout Utilities */
+    .screen {
+      display: none;
+      opacity: 0;
+      transition: opacity 0.7s ease;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      width: 100%;
+    }
+
+    .screen.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .center-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+    }
+
+    /* Camera preview */
+    .camera-wrap {
+      width: 100%;
+      border-radius: 2rem;
+      overflow: hidden;
+      margin: 1.2rem 0;
+      background: rgba(0, 0, 0, 0.05);
+      aspect-ratio: 3 / 4;
+      max-width: 380px;
+      margin-left: auto;
+      margin-right: auto;
+      box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      position: relative;
+    }
+
+    video, canvas#captureCanvas {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .instruction {
+      font-size: 0.95rem;
+      color: #5f4a5e;
+      font-style: italic;
+      margin: 0.5rem 0 0.2rem;
+    }
+
+    /* Loading dots */
+    .loading-dots {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      margin: 1.5rem 0;
+    }
+
+    .loading-dots span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #cfa5c0;
+      animation: pulseDot 1.4s infinite ease-in-out both;
+    }
+
+    .loading-dots span:nth-child(1) { animation-delay: -0.32s; }
+    .loading-dots span:nth-child(2) { animation-delay: -0.16s; }
+    .loading-dots span:nth-child(3) { animation-delay: 0s; }
+
+    @keyframes pulseDot {
+      0%, 80%, 100% { transform: scale(0.7); opacity: 0.4; }
+      40% { transform: scale(1); opacity: 1; }
+    }
+
+    /* Love score circle */
+    .score-circle {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: conic-gradient(#f7d1e0 0deg, #f7d1e0 0deg, #e2d0f0 0deg, #d0e6f5 0deg, #d0f0e4 0deg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 1.5rem auto;
+      position: relative;
+      box-shadow: 0 15px 30px -5px rgba(197, 144, 176, 0.3);
+      transition: background 0.1s ease;
+    }
+
+    .score-circle::before {
+      content: '';
+      position: absolute;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.8);
+    }
+
+    .score-number {
+      position: relative;
+      font-size: 3rem;
+      font-weight: 500;
+      font-family: 'Playfair Display', serif;
+      color: #3a2c3f;
+      line-height: 1;
+    }
+
+    .score-number small {
+      font-size: 1.2rem;
+      font-weight: 400;
+      color: #7a6279;
+    }
+
+    /* Analysis text list */
+    .analysis-lines {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      margin: 1.2rem 0 0.5rem;
+      text-align: center;
+    }
+
+    .analysis-line {
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeSlideUp 0.8s forwards;
+      font-size: 1rem;
+      color: #4e3b4e;
+      letter-spacing: 0.01em;
+    }
+
+    @keyframes fadeSlideUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Heart animation */
+    .heart-pair {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.2rem;
+      margin: 1rem 0 1.5rem;
+      font-size: 2.2rem;
+      color: #d99cb0;
+      filter: drop-shadow(0 6px 12px rgba(217, 156, 176, 0.3));
+    }
+
+    .heart-left, .heart-right {
+      display: inline-block;
+      animation: floatHeart 2.6s ease-in-out infinite;
+    }
+
+    .heart-left { animation-delay: 0s; }
+    .heart-right { animation-delay: 0.6s; }
+
+    @keyframes floatHeart {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-8px) scale(1.06); }
+    }
+
+    /* Message card */
+    .message-card {
+      background: rgba(255, 255, 255, 0.45);
+      border-radius: 1.8rem;
+      padding: 1.8rem 1.5rem;
+      margin: 1.5rem 0 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: #3a2c3f;
+      box-shadow: 0 8px 20px -8px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Footer */
+    .footer {
+      margin-top: 2.2rem;
+      font-size: 0.8rem;
+      color: #7a6279;
+      letter-spacing: 0.02em;
+      border-top: 1px solid rgba(255, 255, 255, 0.7);
+      padding-top: 1.2rem;
+      width: 100%;
+      font-weight: 300;
+    }
+
+    /* Floating hearts background */
+    .floating-hearts {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .floating-hearts span {
+      position: absolute;
+      color: rgba(255, 220, 235, 0.6);
+      font-size: 1.2rem;
+      animation: floatUp 14s infinite linear;
+      bottom: -10%;
+      opacity: 0.5;
+      filter: blur(0.5px);
+    }
+
+    @keyframes floatUp {
+      0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+      15% { opacity: 0.7; }
+      85% { opacity: 0.7; }
+      100% { transform: translateY(-110vh) rotate(20deg); opacity: 0; }
+    }
+
+    /* Utility */
+    .mt-2 { margin-top: 1rem; }
+    .mb-1 { margin-bottom: 0.5rem; }
+    .hidden { display: none !important; }
+
+    .fade-in {
+      animation: fadeIn 1s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Screen transition wrapper */
+    #app-container {
+      width: 100%;
+      max-width: 680px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Camera permission fallback */
+    .error-msg {
+      color: #b34a6b;
+      background: rgba(255, 240, 245, 0.8);
+      padding: 0.8rem;
+      border-radius: 1rem;
+      font-size: 0.9rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 480px) {
+      h1 { font-size: 2.6rem; }
+      .quote { font-size: 1rem; }
+      .score-circle { width: 150px; height: 150px; }
+      .score-circle::before { width: 116px; height: 116px; }
+      .score-number { font-size: 2.4rem; }
+      .btn { padding: 0.85rem 1.6rem; font-size: 0.95rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Floating hearts background -->
+  <div class="floating-hearts" id="floatingHearts"></div>
+
+  <div id="app-container">
+    <!-- SCREEN 1: OPENING -->
+    <div class="glass-card screen active" id="screen-opening">
+      <h1>Ilyan & Afi</h1>
+      <div class="quote">
+        “Di antara ribuan langkah yang saling berpapasan,<br>
+        ada dua hati yang memilih pulang pada arah yang sama.”
+      </div>
+      <button class="btn btn-primary" id="btn-start">🤍 Ukur Semesta Kita</button>
+    </div>
+
+    <!-- SCREEN 2: CAMERA -->
+    <div class="glass-card screen" id="screen-camera">
+      <div class="center-col">
+        <p class="instruction">Tatap layar sejenak,<br>biarkan cahaya menyimpan momen kecil ini.</p>
+        <div class="camera-wrap" id="cameraWrap">
+          <video id="video" autoplay playsinline muted></video>
+          <canvas id="captureCanvas" style="display: none;"></canvas>
+        </div>
+        <button class="btn btn-primary" id="btn-capture">📸 Ambil Momen</button>
+        <p class="error-msg hidden" id="cameraError">Akses kamera diperlukan untuk melanjutkan. Izinkan akses kamera di browser Anda.</p>
+      </div>
+    </div>
+
+    <!-- SCREEN 3: LOADING (after capture) -->
+    <div class="glass-card screen" id="screen-loading">
+      <div class="center-col">
+        <div class="heart-pair">
+          <span class="heart-left">❤️</span>
+          <span class="heart-right">❤️</span>
+        </div>
+        <div class="loading-dots">
+          <span></span><span></span><span></span>
+        </div>
+        <p style="font-style: italic; color: #5f4a5e;">Menghitung kebetulan...</p>
+      </div>
+    </div>
+
+    <!-- SCREEN 4: ANALYSIS + RESULT (disatukan) -->
+    <div class="glass-card screen" id="screen-result">
+      <div class="center-col">
+        <div class="analysis-lines" id="analysisLines">
+          <div class="analysis-line" style="animation-delay: 0s;">Menghitung kebetulan...</div>
+          <div class="analysis-line" style="animation-delay: 0.3s;">Membaca bahasa mata...</div>
+          <div class="analysis-line" style="animation-delay: 0.6s;">Mencari jejak semesta...</div>
+          <div class="analysis-line" style="animation-delay: 0.9s;">Menimbang tawa yang pernah dibagi...</div>
+        </div>
+
+        <!-- Score circle -->
+        <div class="score-circle" id="scoreCircle">
+          <div class="score-number" id="scoreNumber">0<small>%</small></div>
+        </div>
+
+        <!-- dynamic quote after score -->
+        <p class="quote" id="resultQuote" style="font-size: 1rem; margin: 0.5rem 0 1rem;">
+          Kalian bukan dua orang yang sama.<br>Kalian adalah dua cerita yang memilih tumbuh bersama.
+        </p>
+
+        <!-- random poetic message -->
+        <div class="message-card" id="poeticMessage">
+          “Cinta bukan tentang menemukan yang sempurna,...”
+        </div>
+
+        <!-- Action buttons -->
+        <div class="btn-group">
+          <button class="btn btn-secondary" id="btn-repeat">🔄 Ulangi</button>
+          <button class="btn btn-secondary" id="btn-save">💾 Simpan Hasil</button>
+          <button class="btn btn-secondary" id="btn-share">📤 Bagikan</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer inside last screen card? We'll put footer globally after cards but inside container for alignment -->
+  </div>
+
+  <!-- footer separate outside card? Actually we want footer only visible at the end, but it's fine to place inside result card area or as global. We'll place it inside the last screen for simplicity. 
+       But it looks better inside the glass-card, so we add it inside result screen. However to keep design, we add a footer inside the result screen at the bottom. But we need to add it now, so we modify the result screen to include footer after btn-group. We'll add it in the HTML.
+       Let's adjust.
+  -->
+  <style>
+    /* Quick adjust */
+  </style>
+
+  <script>
+    (function() {
+      // --- Data ---
+      const poeticMessages = [
+        "Cinta bukan tentang menemukan yang sempurna, melainkan tetap memilih meski telah melihat segala kurangnya.",
+        "Sebagian orang datang membawa musim. Sebagian lainnya datang lalu menjadi rumah.",
+        "Jika waktu adalah sungai, maka semoga kita tetap memilih perahu yang sama.",
+        "Barangkali semesta tidak mempertemukan tanpa alasan.",
+        "Di dunia yang selalu terburu-buru, ada bahagia dalam seseorang yang memilih menetap."
+      ];
+
+      // --- State ---
+      let currentStream = null;
+      let randomScore = 0;
+      let capturedImageData = null; // not used but kept for potential save
+
+      // --- DOM Elements ---
+      const screens = {
+        opening: document.getElementById('screen-opening'),
+        camera: document.getElementById('screen-camera'),
+        loading: document.getElementById('screen-loading'),
+        result: document.getElementById('screen-result')
+      };
+
+      const btnStart = document.getElementById('btn-start');
+      const btnCapture = document.getElementById('btn-capture');
+      const video = document.getElementById('video');
+      const captureCanvas = document.getElementById('captureCanvas');
+      const cameraError = document.getElementById('cameraError');
+      const scoreNumber = document.getElementById('scoreNumber');
+      const scoreCircle = document.getElementById('scoreCircle');
+      const poeticMessageDiv = document.getElementById('poeticMessage');
+      const resultQuote = document.getElementById('resultQuote');
+      const btnRepeat = document.getElementById('btn-repeat');
+      const btnSave = document.getElementById('btn-save');
+      const btnShare = document.getElementById('btn-share');
+
+      // --- Helper: switch screen ---
+      function showScreen(screenId) {
+        // hide all
+        Object.values(screens).forEach(s => s.classList.remove('active'));
+        if (screens[screenId]) {
+          screens[screenId].classList.add('active');
+        }
+      }
+
+      // --- Floating hearts background ---
+      function initFloatingHearts() {
+        const container = document.getElementById('floatingHearts');
+        const heartChars = ['❤️', '🤍', '💗', '💜', '🩷', '💙', '🌸', '✨'];
+        for (let i = 0; i < 22; i++) {
+          const span = document.createElement('span');
+          span.textContent = heartChars[Math.floor(Math.random() * heartChars.length)];
+          span.style.left = Math.random() * 100 + '%';
+          span.style.fontSize = (Math.random() * 1.5 + 0.8) + 'rem';
+          span.style.animationDuration = (Math.random() * 12 + 12) + 's';
+          span.style.animationDelay = (Math.random() * -20) + 's';
+          span.style.opacity = Math.random() * 0.4 + 0.2;
+          container.appendChild(span);
+        }
+      }
+
+      // --- Camera functions ---
+      async function startCamera() {
+        try {
+          if (currentStream) {
+            stopCamera();
+          }
+          const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' }, audio: false });
+          currentStream = stream;
+          video.srcObject = stream;
+          cameraError.classList.add('hidden');
+          return true;
+        } catch (err) {
+          console.warn('Camera error:', err);
+          cameraError.classList.remove('hidden');
+          return false;
+        }
+      }
+
+      function stopCamera() {
+        if (currentStream) {
+          currentStream.getTracks().forEach(track => track.stop());
+          currentStream = null;
+          video.srcObject = null;
+        }
+      }
+
+      // --- Capture photo ---
+      function capturePhoto() {
+        if (!currentStream) {
+          // try to restart if not started
+          startCamera().then(success => {
+            if (success) {
+              // wait a moment for video to be ready
+              setTimeout(() => {
+                if (currentStream) {
+                  performCapture();
+                }
+              }, 300);
+            }
+          });
+          return;
+        }
+        performCapture();
+      }
+
+      function performCapture() {
+        if (video.videoWidth === 0 || video.videoHeight === 0) {
+          // wait a bit
+          setTimeout(performCapture, 200);
+          return;
+        }
+        const ctx = captureCanvas.getContext('2d');
+        captureCanvas.width = video.videoWidth;
+        captureCanvas.height = video.videoHeight;
+        ctx.drawImage(video, 0, 0, captureCanvas.width, captureCanvas.height);
+        capturedImageData = captureCanvas.toDataURL('image/jpeg'); // optional
+
+        // proceed to loading screen
+        stopCamera();
+        showScreen('loading');
+
+        // after loading, go to result
+        setTimeout(() => {
+          // finish analysis: generate score and message
+          generateResult();
+          showScreen('result');
+          animateScoreAndContent();
+        }, 2800); // loading duration
+      }
+
+      // --- Generate random score & message ---
+      function generateResult() {
+        // random score 85–100
+        randomScore = Math.floor(Math.random() * 16) + 85; // 85..100
+        // random poetic message
+        const randomIndex = Math.floor(Math.random() * poeticMessages.length);
+        poeticMessageDiv.textContent = `“${poeticMessages[randomIndex]}”`;
+
+        // optional: change quote based on score? we keep the default one from design, but could vary.
+        // For elegance, keep the default quote but maybe update if score is 100? not necessary.
+      }
+
+      // --- Animate score circle and number ---
+      function animateScoreAndContent() {
+        // set final number as text increment
+        let currentDisplay = 0;
+        const target = randomScore;
+        const duration = 1200; // ms
+        const stepTime = 16; // ~60fps
+        const steps = duration / stepTime;
+        const increment = target / steps;
+        let stepCount = 0;
+
+        // update circle gradient based on score (conic gradient)
+        function updateCircle(percent) {
+          const deg = (percent / 100) * 360;
+          // pastel gradient: blush pink -> lavender -> baby blue -> mint
+          scoreCircle.style.background = `conic-gradient(
+            #f7d1e0 0deg, 
+            #f7d1e0 ${deg * 0.3}deg, 
+            #e2d0f0 ${deg * 0.5}deg, 
+            #d0e6f5 ${deg * 0.8}deg, 
+            #d0f0e4 ${deg}deg,
+            rgba(255,255,255,0.2) ${deg}deg
+          )`;
+        }
+
+        // initial
+        updateCircle(0);
+        scoreNumber.innerHTML = `0<small>%</small>`;
+
+        const interval = setInterval(() => {
+          stepCount++;
+          currentDisplay = Math.min(target, Math.round(stepCount * increment));
+          scoreNumber.innerHTML = `${currentDisplay}<small>%</small>`;
+          updateCircle(currentDisplay);
+          if (stepCount >= steps || currentDisplay >= target) {
+            clearInterval(interval);
+            scoreNumber.innerHTML = `${target}<small>%</small>`;
+            updateCircle(target);
+          }
+        }, stepTime);
+
+        // also re-trigger analysis lines animation? they already animate on screen show, but we can restart
+        // reset analysis line animations by cloning or re-adding class (simple)
+        const lines = document.querySelectorAll('.analysis-line');
+        lines.forEach((line, idx) => {
+          line.style.animation = 'none';
+          line.offsetHeight; // reflow
+          line.style.animation = `fadeSlideUp 0.8s forwards`;
+          line.style.animationDelay = `${idx * 0.3}s`;
+        });
+
+        // slight adjust on result quote maybe depending on score? not needed.
+        // also random message already set.
+      }
+
+      // --- Reset to opening ---
+      function resetToOpening() {
+        stopCamera();
+        showScreen('opening');
+        // reset any animation states
+        scoreNumber.innerHTML = `0<small>%</small>`;
+        scoreCircle.style.background = `conic-gradient(#f7d1e0 0deg, #f7d1e0 0deg, #e2d0f0 0deg, #d0e6f5 0deg, #d0f0e4 0deg)`;
+        // reset analysis lines to hidden? they will reanimate later.
+        // also reset poetic message to default first one? optional
+        poeticMessageDiv.textContent = `“${poeticMessages[0]}”`;
+        resultQuote.innerHTML = `Kalian bukan dua orang yang sama.<br>Kalian adalah dua cerita yang memilih tumbuh bersama.`;
+      }
+
+      // --- Save result (simple text download) ---
+      function saveResult() {
+        const message = poeticMessageDiv.textContent;
+        const scoreText = scoreNumber.textContent.trim();
+        const content = `Love Meter: Ilyan & Afi\n\nSkor: ${scoreText}\n\n"${message}"\n\n${resultQuote.textContent}\n\n— Dibuat dengan cinta —`;
+        const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `LoveMeter_Ilyan_Afi_${randomScore}persen.txt`;
+        link.click();
+        URL.revokeObjectURL(link.href);
+      }
+
+      // --- Share (Web Share API fallback) ---
+      function shareResult() {
+        const scoreText = scoreNumber.textContent.trim();
+        const message = poeticMessageDiv.textContent;
+        const shareText = `Love Meter Ilyan & Afi: ${scoreText} 💕\n"${message}"`;
+        if (navigator.share) {
+          navigator.share({
+            title: 'Love Meter: Ilyan & Afi',
+            text: shareText,
+          }).catch((err) => console.log('Share error:', err));
+        } else {
+          // fallback: copy to clipboard
+          navigator.clipboard.writeText(shareText).then(() => {
+            alert('Hasil cinta disalin ke clipboard! 💌');
+          }).catch(() => {
+            alert('Gunakan simpan hasil untuk menyimpan kenangan ini.');
+          });
+        }
+      }
+
+      // --- Event Listeners ---
+      btnStart.addEventListener('click', async () => {
+        showScreen('camera');
+        // start camera after showing screen
+        setTimeout(async () => {
+          const success = await startCamera();
+          if (!success) {
+            // if permission denied, still allow to capture? better show error but user can retry by clicking capture which will try again.
+          }
+        }, 200);
+      });
+
+      btnCapture.addEventListener('click', () => {
+        // if camera not active, try to start then capture
+        if (!currentStream) {
+          startCamera().then(success => {
+            if (success) {
+              setTimeout(() => {
+                capturePhoto();
+              }, 500);
+            } else {
+              // error shown already
+            }
+          });
+        } else {
+          capturePhoto();
+        }
+      });
+
+      btnRepeat.addEventListener('click', () => {
+        resetToOpening();
+        // ensure camera is stopped
+        stopCamera();
+        // also reset poetic message to first? not needed but nice
+      });
+
+      btnSave.addEventListener('click', saveResult);
+
+      btnShare.addEventListener('click', shareResult);
+
+      // cleanup on page unload
+      window.addEventListener('beforeunload', () => {
+        stopCamera();
+      });
+
+      // --- Initialize floating hearts ---
+      initFloatingHearts();
+
+      // Add footer dynamically inside result screen if not exists (to keep HTML clean)
+      // But we also want footer always visible at bottom? It's inside result screen card.
+      const resultScreenCard = screens.result;
+      const footerDiv = document.createElement('div');
+      footerDiv.className = 'footer';
+      footerDiv.innerHTML = `Untuk Afi,<br>yang membuat hari-hari biasa terasa lebih berarti.`;
+      resultScreenCard.appendChild(footerDiv);
+
+      // Also add a subtle footer to opening? Not necessary.
+
+      // Ensure screens other than opening are hidden initially
+      showScreen('opening');
+    })();
+  </script>
+</body>
+</html>
